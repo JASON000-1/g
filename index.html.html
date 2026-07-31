@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BodyGarage Gym | Functional Fitness &amp; Holistic Growth</title>
+<meta name="description" content="BodyGarage Gym on Katani Road, Syokimau — personal training, boxing, CrossFit, yoga, Zumba, bike spinning and weightlifting. Book your first class free.">
+<meta property="og:title" content="BodyGarage Gym | Functional Fitness &amp; Holistic Growth">
+<meta property="og:description" content="Personal training, boxing, CrossFit, yoga, Zumba, bike spinning and weightlifting on Katani Road, Syokimau.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Icon font for social icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Supabase client: lets Upcoming Events and the Daily Board be stored in a shared
+     online database, so every visitor sees the same admin-added content (not just
+     the device that added it). See the SUPABASE_URL / SUPABASE_ANON_KEY setup notes
+     near the top of the second <script> block near the bottom of this page. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --black:#000000;
+    --white:#FFFFFF;
+    --yellow:#FFD400;
+    --yellow-dark:#E6BE00;
+    --grey-line: rgba(0,0,0,.14);
+    --grey-line-inverse: rgba(255,255,255,.18);
+    --shadow:0 10px 30px rgba(0,0,0,0.18);
+    --radius:4px;
+    --display:'Fraunces', serif;
+    --body:'Work Sans', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *,*::before,*::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  body{
+    margin:0;
+    background:var(--white);
+    color:var(--black);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,h4{ font-family:var(--display); margin:0; color:var(--black); }
+  p{ margin:0; }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:3px solid var(--yellow-dark);
+    outline-offset:3px;
+  }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+  .eyebrow{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:0.72rem;
+    font-weight:700;
+    color:var(--yellow-dark);
+  }
+
+  /* ---------- LOGO / BRAND MARK ---------- */
+  .brand{ font-family:var(--display); font-weight:900; letter-spacing:0.01em; text-decoration:none; display:flex; align-items:center; gap:10px; }
+  .brand .word-yellow{ color:var(--yellow); }
+  .brand .word-black{ color:var(--black); }
+  .logo-mark{ flex-shrink:0; display:block; }
+  .brand-logo-img {
+  width: 100%;
+  max-width: 100%;
+  height: 70px;
+  object-fit: contain;
+  display: block;
+}
+  .footer-grid .brand{ font-size:1.3rem; }
+
+  /* ---------- NAV ---------- */
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(255,255,255,0.96);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--grey-line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; max-width:1180px; margin:0 auto;
+  }
+  .nav-inner .brand{ font-size:1.3rem; }
+  nav.links{ display:flex; gap:26px; align-items:center; }
+  nav.links a{
+    text-decoration:none; font-weight:600; font-size:0.92rem; color:var(--black);
+    position:relative; padding:4px 0;
+  }
+  nav.links a:hover{ color:var(--yellow-dark); }
+  nav.links a::after{
+    content:""; position:absolute; left:0; bottom:-3px; width:0; height:2px; background:var(--yellow);
+    transition:width 0.2s ease;
+  }
+  nav.links a:hover::after{ width:100%; }
+  .cta-btn{
+    background:var(--yellow); color:var(--black) !important; padding:11px 20px; border-radius:var(--radius);
+    font-weight:700 !important; font-size:0.86rem !important; text-decoration:none;
+    box-shadow:var(--shadow); transition:background 0.2s ease, transform 0.15s ease;
+  }
+  .cta-btn:hover{ background:var(--yellow-dark); transform:translateY(-1px); }
+  .cta-btn::after{ display:none !important; }
+
+  .burger{ display:none; background:none; border:none; cursor:pointer; padding:6px; }
+  .burger span{ display:block; width:24px; height:2px; background:var(--black); margin:5px 0; }
+
+  @media (max-width: 900px){
+    nav.links{
+      position:absolute; top:100%; left:0; right:0; background:var(--white);
+      flex-direction:column; align-items:flex-start; gap:0; border-bottom:1px solid var(--grey-line);
+      max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    }
+    nav.links.open{ max-height:480px; }
+    nav.links a{ width:100%; padding:14px 28px; border-top:1px solid var(--grey-line); }
+    nav.links a::after{ display:none; }
+    .burger{ display:block; }
+    .cta-btn{ margin:14px 28px 18px; display:inline-block; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:90px 0 70px;
+    background:var(--white);
+    border-bottom:1px solid var(--grey-line);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 5vw, 3.6rem); line-height:1.08; font-weight:900; letter-spacing:-0.01em;
+  }
+  .hero p.lede{
+    margin-top:22px; font-size:1.1rem; color:var(--black); max-width:48ch;
+  }
+  .hero-ctas{ display:flex; gap:16px; margin-top:34px; flex-wrap:wrap; }
+  .btn-ghost{
+    padding:11px 22px; border-radius:var(--radius); border:2px solid var(--black); text-decoration:none;
+    font-weight:700; font-size:0.92rem; transition:background 0.2s ease, color 0.2s ease;
+    background:none; cursor:pointer; font-family:var(--body);
+  }
+  .btn-ghost:hover{ background:var(--black); color:var(--white); }
+  .btn-solid{
+    padding:13px 24px; border-radius:var(--radius); background:var(--yellow); color:var(--black);
+    text-decoration:none; font-weight:700; font-size:0.92rem; box-shadow:var(--shadow);
+    transition:background 0.2s ease, transform 0.15s ease; border:none; cursor:pointer; font-family:var(--body);
+  }
+  .btn-solid:hover{ background:var(--yellow-dark); transform:translateY(-1px); }
+
+  .trust-row{ display:flex; gap:36px; margin-top:38px; flex-wrap:wrap; }
+  .stat strong{ display:block; font-family:var(--display); font-size:1.5rem; color:var(--black); font-weight:700; }
+  .stat span{ font-family:var(--mono); font-size:0.8rem; color:var(--black); }
+
+  /* WOD board signature element */
+  .wod-board{
+    background:var(--black); color:var(--white); border-radius:10px; padding:26px 24px 22px;
+    box-shadow:var(--shadow); border:4px solid var(--yellow); position:relative;
+  }
+  .wod-board .board-label{
+    font-family:var(--mono); text-transform:uppercase; letter-spacing:0.14em; font-size:0.72rem;
+    color:var(--yellow); font-weight:700;
+  }
+  .wod-board h3{ color:var(--white); font-size:1.4rem; margin:8px 0 14px; font-weight:700; }
+  .wod-board-toolbar{ display:none; justify-content:flex-end; margin-bottom:12px; }
+  .wod-add-btn{
+    background:var(--yellow); color:var(--black); border:none; padding:7px 14px; border-radius:var(--radius);
+    font-weight:700; font-size:0.72rem; font-family:var(--mono); text-transform:uppercase; letter-spacing:0.04em;
+    cursor:pointer;
+  }
+  .wod-board .wod-line{
+    display:flex; justify-content:space-between; align-items:center; gap:10px; font-family:var(--mono); font-size:0.92rem;
+    padding:8px 0; border-bottom:1px dashed var(--grey-line-inverse);
+  }
+  .wod-board .wod-line:last-child{ border-bottom:none; }
+  .wod-board .wod-line .wod-name{ flex:1; }
+  .wod-board .wod-line .wod-status{ color:var(--yellow); font-weight:700; }
+  .wod-line-controls{ display:flex; gap:6px; }
+  .wod-icon-btn{
+    width:24px; height:24px; border-radius:50%; border:none; cursor:pointer; font-size:11px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .wod-icon-btn.edit{ background:var(--yellow); color:var(--black); }
+  .wod-icon-btn.delete{ background:#2a2a2a; color:var(--white); }
+
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- SECTION SHELLS ---------- */
+  section{ padding:86px 0; }
+  .section-head{ max-width:640px; margin-bottom:48px; }
+  .section-head h2{ font-size:clamp(1.8rem, 3.4vw, 2.5rem); margin-top:10px; font-weight:700; }
+  .section-head p{ margin-top:14px; color:var(--black); font-size:1.05rem; }
+
+  .band-dark{ background:var(--black); color:var(--white); }
+  .band-dark .section-head h2{ color:var(--white); }
+  .band-dark .section-head p{ color:#D9D9D9; }
+  .band-dark .eyebrow{ color:var(--yellow); }
+  .band-light{ background:#FAFAFA; }
+
+  /* ---------- ABOUT STRIP ---------- */
+  .about-strip{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; margin-top:10px;
+  }
+  .about-card{
+    background:var(--white); border:1px solid var(--grey-line); border-radius:8px; padding:26px;
+  }
+  .about-card h4{ font-size:1.05rem; font-weight:700; margin-bottom:8px; }
+  .about-card p{ color:var(--black); font-size:0.95rem; }
+  @media (max-width: 780px){ .about-strip{ grid-template-columns:1fr; } }
+
+  /* ---------- SCHEDULE ---------- */
+  .schedule-board{
+    background:var(--black); border-radius:12px; border:4px solid var(--yellow); box-shadow:var(--shadow);
+    padding:10px 30px;
+  }
+  .schedule-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 0; border-bottom:1px dashed var(--grey-line-inverse);
+    font-family:var(--mono); color:var(--white); font-size:0.95rem;
+  }
+  .schedule-row:last-child{ border-bottom:none; }
+  .schedule-head{
+    text-transform:uppercase; letter-spacing:0.1em; font-size:0.76rem; color:var(--yellow); font-weight:700;
+  }
+  .schedule-row span:last-child{ font-weight:700; }
+
+  /* ---------- EVENTS ---------- */
+  .events-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; }
+  .event-card{
+    background:var(--white); border:1px solid var(--grey-line); border-radius:8px; overflow:hidden;
+    display:flex; flex-direction:column; position:relative;
+  }
+  .event-photo{
+    height:170px; background:var(--black); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .event-photo img{ width:100%; height:100%; object-fit:cover; }
+  .event-photo .no-photo{
+    font-family:var(--mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--yellow);
+  }
+  .event-date-badge{
+    position:absolute; top:12px; left:12px; background:var(--yellow); color:var(--black);
+    font-family:var(--mono); font-weight:700; font-size:0.72rem; padding:5px 9px; border-radius:4px;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .event-body{ padding:20px; display:flex; flex-direction:column; flex-grow:1; }
+  .event-body h4{ font-size:1.08rem; font-weight:700; }
+  .event-time{ font-family:var(--mono); font-size:0.76rem; color:var(--yellow-dark); margin-top:6px; display:block; }
+  .event-body p{ margin-top:12px; font-size:0.9rem; color:var(--black); flex-grow:1; }
+  .empty-state{
+    grid-column:1/-1; border:2px dashed var(--grey-line); border-radius:8px; padding:40px 24px;
+    text-align:center; font-family:var(--mono); font-size:0.85rem; color:var(--black);
+  }
+  @media (max-width: 980px){ .events-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width: 560px){ .events-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- TRAINERS ---------- */
+  .trainer-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; }
+  .trainer-card{
+    background:var(--white); border:1px solid var(--grey-line); border-radius:8px; overflow:hidden;
+    text-decoration:none; display:block; cursor:pointer; transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .trainer-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow); }
+  .trainer-avatar{
+    height:150px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; font-size:2.4rem;
+  }
+  .trainer-body{ padding:20px; }
+  .trainer-body h4{ font-size:1.05rem; font-weight:700; }
+  .trainer-role{ font-family:var(--mono); font-size:0.74rem; color:var(--yellow-dark); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; display:block; }
+  .trainer-body p{ margin-top:12px; font-size:0.9rem; color:var(--black); }
+  .trainer-cta{ font-family:var(--mono); font-size:0.72rem; color:var(--black); margin-top:14px; display:block; text-transform:uppercase; letter-spacing:0.06em; }
+  @media (max-width: 980px){ .trainer-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width: 560px){ .trainer-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; margin-bottom:26px; }
+  .price-card{
+    background:var(--white); border:1px solid var(--grey-line); border-radius:8px; padding:32px 28px;
+    display:flex; flex-direction:column;
+  }
+  .price-card.featured{ background:var(--black); color:var(--white); position:relative; transform:translateY(-10px); box-shadow:var(--shadow); }
+  .price-card.featured .price-tier, .price-card.featured h3{ color:var(--white); }
+  .price-card.featured .price-desc{ color:#D9D9D9; }
+  .price-card.featured .feat-tag{
+    position:absolute; top:-13px; left:28px; background:var(--yellow); color:var(--black);
+    font-family:var(--mono); font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+    padding:5px 10px; border-radius:3px;
+  }
+  .price-tier{ font-family:var(--mono); text-transform:uppercase; letter-spacing:0.1em; font-size:0.76rem; color:var(--yellow-dark); font-weight:700; }
+  .price-card h3{ font-size:2rem; margin:10px 0 4px; font-weight:900; }
+  .price-card h3 span{ font-size:0.95rem; font-family:var(--body); font-weight:500; color:var(--black); }
+  .price-card.featured h3 span{ color:#D9D9D9; }
+  .price-desc{ font-size:0.92rem; color:var(--black); margin-bottom:18px; }
+  .price-card ul{ list-style:none; margin:0 0 26px; padding:0; flex-grow:1; }
+  .price-card li{ font-size:0.9rem; padding:8px 0; border-top:1px solid var(--grey-line); display:flex; gap:10px; }
+  .price-card.featured li{ border-top:1px solid var(--grey-line-inverse); }
+  .price-card li::before{ content:"—"; color:var(--yellow-dark); font-weight:700; }
+  .price-card.featured li::before{ color:var(--yellow); }
+  @media (max-width: 980px){ .pricing-grid{ grid-template-columns:1fr; } .price-card.featured{ transform:none; } }
+
+  /* ---------- VIDEOS ---------- */
+  .video-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .video-card{
+    position:relative; border-radius:8px; overflow:hidden; aspect-ratio:4/5; cursor:pointer;
+    border:none; padding:0; display:block; width:100%;
+  }
+  .video-thumb{ position:absolute; inset:0; background:var(--black); }
+  .video-card video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+  .video-label{
+    position:absolute; left:0; right:0; bottom:0; padding:16px; color:var(--white);
+    font-family:var(--body); font-weight:700; font-size:0.92rem;
+    background:linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+    pointer-events:none;
+  }
+  .play-btn{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:52px; height:52px; border-radius:50%; background:var(--yellow);
+    display:flex; align-items:center; justify-content:center; transition:transform 0.2s ease;
+  }
+  .video-card:hover .play-btn{ transform:translate(-50%,-50%) scale(1.08); }
+  .play-btn svg{ width:18px; height:18px; margin-left:3px; }
+  @media (max-width: 980px){ .video-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width: 560px){ .video-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- SERVICE GALLERY (tabbed) ---------- */
+  .gallery-tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+  .gallery-tab{
+    font-family:var(--mono); font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    padding:10px 16px; border-radius:var(--radius); border:2px solid var(--black); background:var(--white);
+    cursor:pointer; color:var(--black); transition:background 0.15s ease, color 0.15s ease;
+  }
+  .gallery-tab:hover{ background:var(--yellow); }
+  .gallery-tab.active{ background:var(--black); color:var(--white); border-color:var(--black); }
+  .gallery-panel{ display:none; }
+  .gallery-panel.active{ display:block; }
+  .gallery-panel-head{ margin-bottom:20px; }
+  .gallery-panel-head p{ color:var(--black); font-size:0.95rem; }
+  .gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  grid-auto-rows:190px;
+  gap:16px;
+}
+@media (max-width: 780px){
+  .gallery-grid{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 560px){
+  .gallery-grid{
+    grid-template-columns:1fr;
+    grid-auto-rows:240px;
+    gap:14px;
+  }
+}
+  .gallery-grid img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+  transition:transform 0.3s ease;
+}
+
+.gallery-photo:hover img{
+  transform:scale(1.06);
+}
+  .gallery-photo{ position:relative; width:100%; height:100%; border-radius:6px; overflow:hidden; background:#151515; }
+  .gallery-photo-missing{
+    display:flex; align-items:center; justify-content:center; width:100%; height:100%;
+    font-family:var(--mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--yellow); text-align:center; padding:6px;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+  .info-block{ margin-bottom:26px; }
+  .info-block h4{ font-family:var(--mono); text-transform:uppercase; font-size:0.76rem; letter-spacing:0.1em; color:var(--yellow-dark); margin-bottom:8px; }
+  .info-block p{ color:var(--black); }
+  .info-block .whatsapp-link{ display:inline-block; margin-top:12px; }
+  .map-embed{ margin-top:26px; border-radius:8px; overflow:hidden; border:1px solid var(--grey-line); }
+  .map-embed iframe{ width:100%; height:260px; border:0; display:block; }
+  form.contact-form{ display:flex; flex-direction:column; gap:16px; }
+  form.contact-form label{ font-family:var(--mono); font-size:0.76rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--black); margin-bottom:6px; display:block; }
+  form.contact-form input, form.contact-form textarea{
+    width:100%; padding:13px 14px; border-radius:6px; border:1px solid var(--grey-line); background:var(--white);
+    font-family:var(--body); font-size:0.95rem; color:var(--black); resize:vertical;
+  }
+  form.contact-form input:focus, form.contact-form textarea:focus{ border-color:var(--yellow-dark); }
+  .form-msg{ font-size:0.88rem; font-family:var(--mono); margin-top:6px; min-height:1.2em; color:var(--black); }
+  @media (max-width: 900px){ .contact-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--black); color:#D9D9D9; padding:50px 0 26px; }
+  .footer-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; padding-bottom:30px; border-bottom:1px solid var(--grey-line-inverse); }
+  .footer-links{ display:flex; gap:36px; flex-wrap:wrap; }
+  .footer-links h5{ font-family:var(--mono); text-transform:uppercase; font-size:0.72rem; letter-spacing:0.1em; color:var(--yellow); margin-bottom:12px; }
+  .footer-links a{ display:block; text-decoration:none; color:#D9D9D9; font-size:0.9rem; padding:5px 0; }
+  .footer-links a:hover{ color:var(--white); }
+  .footer-links p{ color:#D9D9D9; font-size:0.9rem; padding:5px 0; }
+  .footer-bottom{ padding-top:22px; font-size:0.8rem; font-family:var(--mono); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .footer-bottom a{ color:#D9D9D9; text-decoration:none; }
+  .footer-bottom a:hover{ color:var(--yellow); }
+  .social-icons{ display:flex; gap:14px; margin-top:16px; }
+  .social-icons a, .footer-bottom i{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.08);
+    color:#D9D9D9; transition:background 0.2s ease, color 0.2s ease;
+  }
+  .social-icons a:hover{ background:var(--yellow); color:var(--black); }
+
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,0.65); display:none; align-items:center; justify-content:center;
+    z-index:100; padding:24px;
+  }
+  .modal-backdrop.open{ display:flex; }
+  .modal-box{ background:var(--white); border-radius:10px; padding:30px; max-width:420px; text-align:center; border:3px solid var(--yellow); }
+  .modal-box h4{ margin-bottom:10px; }
+  .modal-box p{ color:var(--black); font-size:0.92rem; margin-bottom:20px; }
+  .modal-box button{ background:var(--yellow); color:var(--black); border:none; padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; font-family:var(--body); }
+
+  /* ---------- ADMIN: private event manager ---------- */
+  .events-toolbar{ display:flex; justify-content:flex-end; margin-bottom:22px; }
+  .admin-add-btn{
+    background:var(--black); color:var(--white); border:none; padding:11px 20px; border-radius:var(--radius);
+    font-weight:700; font-size:0.86rem; font-family:var(--body); cursor:pointer;
+    display:flex; align-items:center; gap:8px; box-shadow:var(--shadow);
+  }
+  .admin-add-btn:hover{ background:#1a1a1a; }
+  .event-edit-controls{ position:absolute; top:12px; right:12px; display:flex; gap:6px; z-index:2; }
+  .event-icon-btn{
+    width:30px; height:30px; border-radius:50%; border:none; cursor:pointer; font-size:13px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.25);
+  }
+  .event-icon-btn.edit{ background:var(--yellow); color:var(--black); }
+  .event-icon-btn.delete{ background:#1a1a1a; color:var(--white); }
+
+  .admin-footer-link{
+    font-family:var(--mono) !important; font-size:0.68rem !important; opacity:0.32;
+    text-decoration:none; letter-spacing:0.06em; transition:opacity 0.2s ease;
+  }
+  .admin-footer-link:hover{ opacity:0.85; }
+
+  .admin-badge{
+    position:fixed; bottom:18px; right:18px; z-index:70;
+    background:var(--yellow); color:var(--black); font-family:var(--mono); font-size:0.72rem; font-weight:700;
+    padding:9px 10px 9px 14px; border-radius:24px; box-shadow:var(--shadow);
+    display:none; align-items:center; gap:10px;
+  }
+  .admin-badge.visible{ display:flex; }
+  .admin-badge button{
+    background:var(--black); color:var(--white); border:none; border-radius:16px; padding:5px 12px;
+    font-size:0.68rem; font-weight:700; cursor:pointer; font-family:var(--mono);
+  }
+
+  .admin-modal-box{ max-width:460px; text-align:left; }
+  .admin-modal-box h4{ margin-bottom:16px; }
+  .admin-modal-box form{ display:flex; flex-direction:column; gap:14px; }
+  .admin-modal-box label{ font-family:var(--mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--black); margin-bottom:5px; display:block; }
+  .admin-modal-box input, .admin-modal-box textarea{
+    width:100%; padding:11px 12px; border-radius:6px; border:1px solid var(--grey-line);
+    font-family:var(--body); font-size:0.92rem; color:var(--black); resize:vertical;
+  }
+  .admin-modal-box .field-row{ display:flex; gap:12px; }
+  .admin-modal-box .field-row > div{ flex:1; }
+  .admin-modal-actions{ display:flex; gap:12px; margin-top:6px; }
+  .admin-modal-actions button{ flex:1; }
+  .admin-modal-actions .btn-cancel{ background:var(--white); border:2px solid var(--black); color:var(--black); }
+  .admin-error{ color:#B00020; font-family:var(--mono); font-size:0.8rem; min-height:1.1em; }
+  .photo-upload-row{ display:flex; align-items:center; gap:12px; }
+  .photo-preview{
+    width:64px; height:64px; border-radius:6px; object-fit:cover; border:1px solid var(--grey-line);
+    background:#f2f2f2; flex-shrink:0; display:none;
+  }
+  .photo-preview.visible{ display:block; }
+  .photo-remove-btn{
+    font-family:var(--mono); font-size:0.72rem; background:none; border:1px solid var(--grey-line);
+    border-radius:6px; padding:6px 10px; cursor:pointer; color:var(--black); display:none;
+  }
+  .photo-remove-btn.visible{ display:inline-block; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <img src="images/bodygarage-logo.jpg" alt="BodyGarage Gym logo" class="brand-logo-img">
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#schedule">Hours</a>
+      <a href="#events">Events</a>
+      <a href="#trainers">Training</a>
+      <a href="#pricing">Membership</a>
+      <a href="#videos">Videos</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="cta-btn">Join now</a>
+    </nav>
+    <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Functional Fitness &amp; Holistic Growth</p>
+        <h1><span class="word-yellow">BODYGARAGE</span> <span class="word-black">GYM</span></h1>
+        <p class="lede">Train harder. Live stronger. Join the leading functional fitness gym on Katani Road, opposite Katani Villas. Whether you're a beginner or an athlete, our experienced coaches are ready to help you reach your fitness goals and build a healthier lifestyle.</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn-solid">Book Your First Class Free</a>
+          <a href="#schedule" class="btn-ghost">See This Week's Board</a>
+        </div>
+        <div class="trust-row">
+          <div class="stat">
+            <strong>7</strong>
+            <span>Fitness Services</span>
+          </div>
+          <div class="stat">
+            <strong>5AM–9PM</strong>
+            <span>Monday–Friday</span>
+          </div>
+          <div class="stat">
+            <strong>7AM–2PM</strong>
+            <span>Saturday &amp; Public Holidays</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wod-board">
+        <p class="board-label">Today's Board</p>
+        <h3>BODYGARAGE GYM TRAINING</h3>
+        <div class="wod-board-toolbar" id="wodBoardToolbar">
+          <button class="wod-add-btn" id="addActivityBtn">+ Add Activity</button>
+        </div>
+        <div id="dailyActivitiesList">
+          <!-- Rendered from stored daily activity data -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why BodyGarage Gym</p>
+        <h2>Functional fitness for a stronger, healthier you.</h2>
+        <p>At BodyGarage Gym, we believe fitness is more than exercise. We combine functional training, strength, movement, and healthy living to help you grow physically and mentally — holistic growth.</p>
+      </div>
+      <div class="about-strip">
+        <div class="about-card">
+          <h4>Personal Training</h4>
+          <p>Get personalised guidance and training designed around your fitness goals, ability, and progress. You're never on your own.</p>
+        </div>
+        <div class="about-card">
+          <h4>Boxing &amp; CrossFit</h4>
+          <p>Build strength, endurance, speed, and confidence through boxing and high-energy CrossFit training. We scale load and movement, never intensity of effort.</p>
+        </div>
+        <div class="about-card">
+          <h4>Yoga, Zumba, Bike Spinning &amp; Weightlifting</h4>
+          <p>Enjoy a complete fitness experience with yoga, Zumba, bike spinning, and weightlifting to support your strength, flexibility, and overall wellness. Progress you can see, not just track in an app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule" class="band-dark">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Opening Hours</p>
+        <h2>When to train with us.</h2>
+        <p>Train at BodyGarage Gym during our convenient opening hours. We offer personal training, boxing, yoga, Zumba, bike spinning, weightlifting, and CrossFit.</p>
+      </div>
+      <div class="schedule-board">
+        <div class="schedule-row schedule-head">
+          <span>Day</span>
+          <span>Opening Hours</span>
+        </div>
+        <div class="schedule-row">
+          <span>Monday – Friday</span>
+          <span>5:00 AM – 9:00 PM</span>
+        </div>
+        <div class="schedule-row">
+          <span>Saturday</span>
+          <span>7:00 AM – 2:00 PM</span>
+        </div>
+        <div class="schedule-row">
+          <span>Public Holidays</span>
+          <span>7:00 AM – 2:00 PM</span>
+        </div>
+        <div class="schedule-row">
+          <span>Sunday</span>
+          <span>Closed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS -->
+  <section id="events">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">What's Coming Up</p>
+        <h2>Upcoming events.</h2>
+        <p>Clinics, challenges, and special sessions at BodyGarage Gym.</p>
+      </div>
+      <div class="events-toolbar" id="eventsToolbar" style="display:none;">
+        <button class="admin-add-btn" id="addEventBtn">+ Add Event</button>
+      </div>
+      <div class="events-grid" id="eventsGrid">
+        <!-- Rendered from stored event data -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINERS -->
+  <section id="trainers" class="band-light">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Our Training</p>
+        <h2>Training designed for your goals.</h2>
+        <p>Whether you want to build strength, improve your fitness, lose weight, or simply live healthier, BodyGarage Gym has a training option for you. Tap a service to jump to its photo gallery below.</p>
+      </div>
+      <div class="trainer-grid" id="trainerGrid">
+        <!-- Rendered from the SITE_CONTENT block near the bottom of this page -->
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Membership</p>
+        <h2>Simple pricing, no lock-in games.</h2>
+        <p>Every plan includes programming, coaching, and access to open gym hours. Cancel or pause anytime.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <p class="price-tier">Daily</p>
+          <h3>Ksh 500 <span>/ day</span></h3>
+          <p class="price-desc">Perfect for anyone who wants a single day of training.</p>
+          <ul>
+            <li>Full gym access for the day</li>
+            <li>Access to gym equipment</li>
+            <li>No long-term commitment</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Book a Class</a>
+        </div>
+        <div class="price-card featured">
+          <span class="feat-tag">Most Common</span>
+          <p class="price-tier">Regular Membership</p>
+          <h3>Ksh 5,000 <span>/ month</span></h3>
+          <p class="price-desc">Train consistently and enjoy full access to BodyGarage Gym.</p>
+          <ul>
+            <li>Full gym access</li>
+            <li>Weightlifting equipment</li>
+            <li>Functional fitness training</li>
+            <li>Yoga, Zumba, Bike Spinning &amp; CrossFit</li>
+          </ul>
+          <a href="#contact" class="btn-solid" style="text-align:center;">Join BodyGarage Gym</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Boxing</p>
+          <h3>Ksh 1,500 <span>/ month</span></h3>
+          <p class="price-desc">Registration as a member is required. Pay monthly or per session.</p>
+          <ul>
+            <li>Registration required to join</li>
+            <li>Monthly: Ksh 1,500</li>
+            <li>Per session: Ksh 500</li>
+            <li>Coached boxing sessions</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Register for Boxing</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Student Off-Peak</p>
+          <h3>Ksh 3,000 <span>/ month</span></h3>
+          <p class="price-desc">Affordable off-peak membership for students aged 21 and below.</p>
+          <ul>
+            <li>Off-peak gym access</li>
+            <li>Student-friendly pricing</li>
+            <li>Strength &amp; fitness training</li>
+            <li>For students aged 21 and below</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Train With Us</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Weekly</p>
+          <h3>Ksh 2,000 <span>/ week</span></h3>
+          <p class="price-desc">Flexible weekly membership for short-term training.</p>
+          <ul>
+            <li>Weekly gym access</li>
+            <li>Functional fitness training</li>
+            <li>Access to gym equipment</li>
+            <li>No monthly commitment</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Join BodyGarage</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Couples</p>
+          <h3>Ksh 9,000 <span>/ month</span></h3>
+          <p class="price-desc">Train together and stay motivated together.</p>
+          <ul>
+            <li>Membership for two</li>
+            <li>Full gym access</li>
+            <li>Strength &amp; fitness training</li>
+            <li>Great for couples</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Join BodyGarage</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Senior Membership</p>
+          <h3>Ksh 4,000 <span>/ month</span></h3>
+          <p class="price-desc">Special membership for seniors aged 55 and above.</p>
+          <ul>
+            <li>For ages 55+</li>
+            <li>Full gym access</li>
+            <li>Strength &amp; mobility training</li>
+            <li>Supportive fitness environment</li>
+          </ul>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Join BodyGarage</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LONGER TERM DISCOUNTS -->
+  <section class="band-light">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Save More</p>
+        <h2>Commit longer. Save more.</h2>
+        <p>Choose a longer membership period and enjoy special BodyGarage discounts.</p>
+      </div>
+      <div class="pricing-grid" style="margin-bottom:0;">
+        <div class="price-card">
+          <p class="price-tier">Quarterly</p>
+          <h3>10% <span>off</span></h3>
+          <p class="price-desc">Save 10% when you choose a three-month membership.</p>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Get Started</a>
+        </div>
+        <div class="price-card featured">
+          <span class="feat-tag">Best Value</span>
+          <p class="price-tier">Half-Yearly</p>
+          <h3>15% <span>off</span></h3>
+          <p class="price-desc">Save 15% when you commit to six months of training.</p>
+          <a href="#contact" class="btn-solid" style="text-align:center;">Get Started</a>
+        </div>
+        <div class="price-card">
+          <p class="price-tier">Annual</p>
+          <h3>20% <span>off</span></h3>
+          <p class="price-desc">Our biggest saving for a full year of commitment.</p>
+          <a href="#contact" class="btn-ghost" style="text-align:center;">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section id="videos">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">See The Work</p>
+        <h2>Training clips from the floor.</h2>
+        <p>A look at real classes, real lifts, and real coaching cues.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-1.jpg">
+    <source src="videos/gym-video-1.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Bike Spin</span>
+</div>
+        <div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-2.jpg">
+    <source src="videos/gym-video-2.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Boxing</span>
+</div>
+        <div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-3.jpg">
+    <source src="./videos/gym-video-3.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Zumba</span>
+</div>
+        <div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-4.jpg">
+    <source src="./videos/gym-video-4.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Crossfit</span>
+</div><div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-5.jpg">
+    <source src="./videos/gym-video-5.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Weightlifting</span>
+</div><div class="video-card">
+  <video controls playsinline preload="metadata" poster="./images/gym-video-6.jpg">
+    <source src="./videos/gym-video-6.mp4" type="video/mp4">
+  </video>
+  <span class="video-label">Weight lifting</span>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY: one tab per service, photos come from the SITE_CONTENT block below -->
+  <section id="gallery" class="band-light">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Around The Box</p>
+        <h2>Photo gallery, by service.</h2>
+        <p>Pick a service below to see its photos.</p>
+      </div>
+      <div class="gallery-tabs" id="galleryTabs"></div>
+      <div id="galleryPanels"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap contact-grid">
+      <div>
+        <p class="eyebrow">Visit Us</p>
+        <h2 style="margin-top:10px;">Come try a class on us.</h2>
+        <div class="info-block" style="margin-top:28px;">
+          <h4>Address</h4>
+          <p>Katani Road, Opposite Katani Villas, Syokimau, Nairobi</p>
+        </div>
+        <div class="info-block">
+          <h4>Hours</h4>
+          <p>Mon–Fri 5:00 AM – 9:00 PM<br>Sat &amp; Public Holidays 7:00 AM – 2:00 PM · Sun Closed</p>
+        </div>
+        <div class="info-block">
+          <h4>Contact</h4>
+          <p><a href="tel:+254725390034">+254 725 390 034</a></p>
+          <a href="https://wa.me/254725390034?text=Hello%20BodyGarage%20Gym%2C%20I%27d%20like%20to%20know%20more%20about%20membership." target="_blank" rel="noopener noreferrer" class="btn-solid whatsapp-link">💬 WhatsApp BodyGarage</a>
+        </div>
+        <div class="map-embed">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d255272.23618392096!2d36.9524736!3d-1.3991936!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f0d000c4e538f%3A0x644a5566806159b2!2sThe%20Body%20Garage%20Gym!5e0!3m2!1sen!2ske!4v1785193757862!5m2!1sen!2ske" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="BodyGarage Gym location map"></iframe>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=The+Body+Garage+Gym,+Katani+Road,+Syokimau,+Kenya" target="_blank" rel="noopener noreferrer" class="btn-solid">📍 Get Directions to BodyGarage</a>
+        </div>
+      </div>
+      <div>
+        <form class="contact-form" id="contactForm">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required placeholder="Your name">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com">
+          </div>
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="Tell us about your goals, or just say hi."></textarea>
+          </div>
+          <button type="submit" class="btn-solid" style="align-self:flex-start;">Send Message</button>
+          <p class="form-msg" id="formMsg" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#top" class="brand">
+          <img src="images/bodygarage-logo.jpg" alt="BodyGarage Gym logo" class="brand-logo-img">
+        </a>
+
+        <p style="margin-top:14px; max-width:32ch; font-size:0.9rem;">
+          Functional fitness and holistic growth.
+        </p>
+
+        <div class="social-icons">
+          <a href="https://facebook.com/BodyGarageGym" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://instagram.com/thebodygaragegym" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://tiktok.com/@the.body.garage" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a href="https://wa.me/254725390034" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div>
+          <h5>Quick Links</h5>
+          <a href="#top">Home</a>
+          <a href="#trainers">Services</a>
+          <a href="#pricing">Membership</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <p>📞 +254 725 390 034</p>
+          <p>✉️ thebodygaragefit@gmail.com</p>
+          <p>📍 Syokimau, Katani Road</p>
+          <p>🕒 Mon–Fri: 5AM–9PM</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 BodyGarage Gym. All Rights Reserved.</span>
+
+      <span style="display:flex; align-items:center; gap:16px;">
+        <a href="https://facebook.com/BodyGarageGym" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://instagram.com/thebodygaragegym" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://tiktok.com/@the.body.garage" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+          <i class="fab fa-tiktok"></i>
+        </a>
+        <a href="https://wa.me/254725390034" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="#" id="adminEntryLink" class="admin-footer-link">JM</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- Admin login (only reachable via the discreet "Admin" link in the footer) -->
+<div class="modal-backdrop" id="adminLoginModal">
+  <div class="modal-box admin-modal-box">
+    <h4>Admin login</h4>
+    <form id="adminLoginForm">
+      <div>
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" type="password" required autocomplete="off" placeholder="Enter password">
+      </div>
+      <p class="admin-error" id="adminLoginError"></p>
+      <div class="admin-modal-actions">
+        <button type="button" class="btn-cancel" id="adminLoginCancel">Cancel</button>
+        <button type="submit" class="btn-solid" style="border-radius:6px;">Log in</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add / edit event (only shown once logged in as admin) -->
+<div class="modal-backdrop" id="eventFormModal">
+  <div class="modal-box admin-modal-box">
+    <h4 id="eventFormTitle">Add event</h4>
+    <form id="eventForm">
+      <div>
+        <label for="evTitle">Event title</label>
+        <input id="evTitle" required placeholder="e.g. Boxing Fundamentals Clinic">
+      </div>
+      <div class="field-row">
+        <div>
+          <label for="evDate">Date</label>
+          <input id="evDate" type="date" required>
+        </div>
+        <div>
+          <label for="evTime">Time</label>
+          <input id="evTime" placeholder="e.g. 10:00 AM">
+        </div>
+      </div>
+      <div>
+        <label for="evDescription">Description</label>
+        <textarea id="evDescription" rows="3" placeholder="Short description shown on the card"></textarea>
+      </div>
+      <div>
+        <label for="evImageFile">Event photo</label>
+        <div class="photo-upload-row">
+          <input id="evImageFile" type="file" accept="image/*">
+          <img id="evImagePreview" class="photo-preview" alt="Selected event photo preview">
+          <button type="button" class="photo-remove-btn" id="evImageRemove">Remove photo</button>
+        </div>
+        <input type="hidden" id="evImage">
+      </div>
+      <div class="admin-modal-actions">
+        <button type="button" class="btn-cancel" id="eventFormCancel">Cancel</button>
+        <button type="submit" class="btn-solid" style="border-radius:6px;" id="eventFormSubmit">Save event</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add / edit daily activity (only shown once logged in as admin) -->
+<div class="modal-backdrop" id="activityFormModal">
+  <div class="modal-box admin-modal-box">
+    <h4 id="activityFormTitle">Add daily activity</h4>
+    <form id="activityForm">
+      <div>
+        <label for="daName">Activity name</label>
+        <input id="daName" required placeholder="e.g. Bike Spinning">
+      </div>
+      <div>
+        <label for="daStatus">Status / time</label>
+        <input id="daStatus" required placeholder="e.g. Available, or 6:00 AM">
+      </div>
+      <div class="admin-modal-actions">
+        <button type="button" class="btn-cancel" id="activityFormCancel">Cancel</button>
+        <button type="submit" class="btn-solid" style="border-radius:6px;" id="activityFormSubmit">Save activity</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Floating badge shown only while logged in on this device -->
+<div class="admin-badge" id="adminBadge">
+  <span>Admin mode active</span>
+  <button id="adminLogoutBtn">Log out</button>
+</div>
+
+<!-- ===========================================================
+     EDIT ME: This block defines SITE_CONTENT — starter data
+     for Upcoming Events, the Daily Board, and each service's
+     photos (used only the first time the page loads on a
+     device).
+
+     Events and daily board items no longer need to be edited
+     here day-to-day: click "Admin" at the bottom of the page to
+     log in and add, edit, or remove them from private panels —
+     visitors never see those controls. The arrays below are
+     just the initial seed.
+
+     HOW TO ADD A PHOTO TO A SERVICE (e.g. Boxing)
+     -----------------------------------------------
+     1) Put your photo file inside a matching folder next to
+        this HTML file, e.g. images/boxing/your-photo.jpg
+     2) Add that path as a new line inside that service's
+        "photos" array below — always WITHOUT a leading slash,
+        e.g. "images/boxing/your-photo.jpg", not
+        "/images/boxing/your-photo.jpg".
+     That's it — it automatically shows up in that service's
+     gallery AND updates its photo-count on the Training card.
+     (Event photos and Daily Board entries don't need any of
+     this — admins can upload/add those directly from the
+     website itself.)
+     =========================================================== -->
+<script>
+  const SITE_CONTENT = {
+
+    /* ---------------- UPCOMING EVENTS ---------------- */
+    events: [
+      {
+        id: "evt-partner-wod",
+        title: "Saturday Partner WOD Challenge",
+        date: "2026-08-15",
+        time: "8:00 AM",
+        description: "Team up and compete in our monthly partner workout challenge. Prizes for the top 3 teams.",
+        image: "" // e.g. "images/events/partner-wod.jpg"
+      },
+      {
+        id: "evt-boxing-clinic",
+        title: "Boxing Fundamentals Clinic",
+        date: "2026-08-22",
+        time: "10:00 AM",
+        description: "A 90-minute clinic covering stance, guard, and combinations. Registration required — Ksh 500 per session or Ksh 1,500 monthly.",
+        image: ""
+      }
+      /* This is just seed data for a first-time visit — once the
+         page has loaded once, use the "Admin" link in the footer
+         to add/edit/remove events instead of editing this file. */
+    ],
+
+    /* ---------------- DAILY ACTIVITIES BOARD ---------------- */
+    dailyActivities: [
+      { id: "da-personal-training", name: "Personal Training", status: "Available" },
+      { id: "da-boxing", name: "Boxing", status: "Available" },
+      { id: "da-weightlifting", name: "Weightlifting", status: "Available" },
+      { id: "da-crossfit", name: "CrossFit", status: "Available" }
+      /* Seed data only — once loaded, use the "Admin" link in the
+         footer to add/edit/remove board items instead of editing
+         this file. */
+    ],
+
+    /* ---------------- SERVICES & PHOTOS ---------------- */
+    services: {
+      "personal-training": {
+        label: "Personal Training",
+        tag: "PT",
+        blurb: "Personalised workouts designed around your goals, fitness level, and progress.",
+        photos: [
+          "images/gallery/personal-training/photo1.jpg",
+          "images/gallery/personal-training/photo2.jpg",
+          "images/gallery/personal-training/photo3.jpg",
+          "images/gallery/personal-training/photo4.jpg",
+          "images/gallery/personal-training/photo5.jpg",
+          "images/gallery/personal-training/photo6.jpg"
+        ]
+      },
+      "boxing": {
+        label: "Boxing",
+        tag: "BX",
+        blurb: "Improve your conditioning, coordination, speed, and confidence through boxing. Registration required — Ksh 1,500/month or Ksh 500/session.",
+        photos: [
+          "images/gallery/boxing/photo1.jpg",
+          "images/gallery/boxing/photo2.jpg"
+        ]
+      },
+      "yoga": {
+        label: "Yoga",
+        tag: "YG",
+        blurb: "Build flexibility, breath control, and calm through guided yoga sessions.",
+        photos: [
+          "images/yoga/1.jpg",
+          "images/yoga/2.jpg"
+        ]
+      },
+      "zumba": {
+        label: "Zumba",
+        tag: "ZM",
+        blurb: "High-energy dance fitness that makes cardio feel like a party.",
+        photos: [
+          "images/zumba/1.jpg",
+          "images/zumba/2.jpg",
+          "images/zumba/3.jpg",
+          "images/zumba/4.jpg"
+        ]
+      },
+      "bike-spinning": {
+        label: "Bike Spinning",
+        tag: "BS",
+        blurb: "High-energy indoor cycling classes that build endurance and torch calories to great music.",
+        photos: [
+          "images/bike-spinning/photo1.jpg",
+          "images/bike-spinning/photo2.jpg"
+        ]
+      },
+      "weightlifting": {
+        label: "Weightlifting",
+        tag: "WL",
+        blurb: "Structured strength programming to build power and technique.",
+        photos: [
+        "images/gallery/personal-training/w.jpg",
+        "images/gallery/personal-training/w1.jpg",
+        "images/gallery/personal-training/w2.jpg",
+        "images/gallery/personal-training/w3.jpg",
+        "images/gallery/personal-training/w4.jpg",
+        "images/gallery/personal-training/w5.jpg",
+        "images/gallery/personal-training/w6.jpg",
+        "images/gallery/personal-training/w7.jpg"
+          ]
+      },
+      "crossfit": {
+        label: "CrossFit",
+        tag: "CF",
+        blurb: "High-intensity functional training that builds strength and endurance.",
+        photos: [
+           "images/crossfit/1.jpg",
+           "images/crossfit/2.jpg",
+           "images/crossfit/3.jpg",
+           "images/crossfit/4.jpg",
+           "images/crossfit/5.jpg",
+           "images/crossfit/6.jpg"
+        ]
+      }
+    }
+  };
+</script>
+<script>
+  const burgerBtn = document.getElementById('burgerBtn');
+  const navLinks = document.getElementById('navLinks');
+  burgerBtn.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    burgerBtn.setAttribute('aria-expanded', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    burgerBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  const form = document.getElementById('contactForm');
+  const formMsg = document.getElementById('formMsg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    formMsg.textContent = "Thanks — we'll get back to you shortly.";
+    form.reset();
+  });
+
+  /* ===========================================================
+     Everything below reads the SITE_CONTENT object defined above and
+     renders: Upcoming Events, the Daily Activities Board, Trainer
+     cards, and the tabbed photo gallery. You never need to edit
+     this script — just edit that SITE_CONTENT block instead.
+     =========================================================== */
+
+  /* ===========================================================
+     PRIVATE ADMIN PANEL (events + daily board)
+     ---------------------------------------------------------
+     Events and daily board items are stored in a shared Supabase
+     (Postgres) database, so every visitor — on any device —
+     sees the same admin-added content. Only someone who logs in
+     via the "Admin" link (password-gated) sees Add/Edit/Delete
+     controls or the floating "Admin mode active" badge — every
+     other visitor sees plain read-only content.
+
+     SETUP (one-time, ~10 minutes):
+     1) Create a free project at https://supabase.com
+     2) In the SQL editor, run the table + policy statements from
+        the setup guide provided alongside this file.
+     3) Paste your Project URL and anon public key below, replacing
+        the two "YOUR_..." placeholders.
+     Until you do that, the site automatically falls back to this
+     browser's local storage (same as before) so nothing breaks.
+
+     Note: this is a static HTML page with no private server, so
+     ADMIN_PASSWORD is a simple front-door, not real security —
+     anyone who reads the page source could find it, and (once
+     Supabase is connected) could in principle write to the
+     database directly using the public anon key. Change
+     ADMIN_PASSWORD to something only you know, and don't reuse a
+     password you use elsewhere.
+     =========================================================== */
+  const ADMIN_PASSWORD = "kenya001";
+  const EVENTS_STORAGE_KEY = "bg_events_v1";
+  const DAILY_ACTIVITIES_STORAGE_KEY = "bg_daily_activities_v1";
+  const ADMIN_SESSION_KEY = "bg_admin_session";
+
+  const SUPABASE_URL = "https://btcwhaerqfjvjefezjdc.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0Y3doYWVycWZqdmplZmV6amRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0Mzk5MjAsImV4cCI6MjEwMTAxNTkyMH0.a13faWZAdLs2ONkzOpataBoS33s6yfdSoIOUzw9WX3c";
+  const SUPABASE_READY = SUPABASE_URL !== "YOUR_SUPABASE_URL" && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
+  const supabaseClient = (SUPABASE_READY && typeof supabase !== 'undefined')
+    ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  function isAdmin(){
+    return localStorage.getItem(ADMIN_SESSION_KEY) === "1";
+  }
+
+  /* ---- Events: shared (Supabase) with local fallback ---- */
+  async function fetchEvents(){
+    if (supabaseClient){
+      try {
+        const { data, error } = await supabaseClient.from('bg_events').select('*').order('date', { ascending: true });
+        if (!error) return data || [];
+        console.error('Supabase fetchEvents failed, using local copy:', error.message);
+      } catch(e){
+        console.error('Supabase fetchEvents threw, using local copy:', e.message);
+      }
+    }
+    try {
+      const raw = localStorage.getItem(EVENTS_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e){ /* fall through to seed data */ }
+    const seed = SITE_CONTENT.events || [];
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(seed));
+    return seed;
+  }
+
+  async function upsertEvent(ev){
+    if (supabaseClient){
+      try {
+        const { error } = await supabaseClient.from('bg_events').upsert(ev);
+        if (error) console.error('Supabase upsertEvent failed:', error.message);
+      } catch(e){
+        console.error('Supabase upsertEvent threw:', e.message);
+      }
+      return;
+    }
+    const events = await fetchEvents();
+    const idx = events.findIndex(e => e.id === ev.id);
+    if (idx !== -1) events[idx] = ev; else events.push(ev);
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+  }
+
+  async function removeEvent(id){
+    if (supabaseClient){
+      try {
+        const { error } = await supabaseClient.from('bg_events').delete().eq('id', id);
+        if (error) console.error('Supabase removeEvent failed:', error.message);
+      } catch(e){
+        console.error('Supabase removeEvent threw:', e.message);
+      }
+      return;
+    }
+    const events = (await fetchEvents()).filter(e => e.id !== id);
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+  }
+
+  /* ---- Daily activities board: shared (Supabase) with local fallback ---- */
+  async function fetchDailyActivities(){
+    if (supabaseClient){
+      try {
+        const { data, error } = await supabaseClient.from('bg_daily_activities').select('*').order('created_at', { ascending: true });
+        if (!error) return data || [];
+        console.error('Supabase fetchDailyActivities failed, using local copy:', error.message);
+      } catch(e){
+        console.error('Supabase fetchDailyActivities threw, using local copy:', e.message);
+      }
+    }
+    try {
+      const raw = localStorage.getItem(DAILY_ACTIVITIES_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e){ /* fall through to seed data */ }
+    const seed = SITE_CONTENT.dailyActivities || [];
+    localStorage.setItem(DAILY_ACTIVITIES_STORAGE_KEY, JSON.stringify(seed));
+    return seed;
+  }
+
+  async function upsertDailyActivity(item){
+    if (supabaseClient){
+      try {
+        const { error } = await supabaseClient.from('bg_daily_activities').upsert(item);
+        if (error) console.error('Supabase upsertDailyActivity failed:', error.message);
+      } catch(e){
+        console.error('Supabase upsertDailyActivity threw:', e.message);
+      }
+      return;
+    }
+    const items = await fetchDailyActivities();
+    const idx = items.findIndex(a => a.id === item.id);
+    if (idx !== -1) items[idx] = item; else items.push(item);
+    localStorage.setItem(DAILY_ACTIVITIES_STORAGE_KEY, JSON.stringify(items));
+  }
+
+  async function removeDailyActivity(id){
+    if (supabaseClient){
+      try {
+        const { error } = await supabaseClient.from('bg_daily_activities').delete().eq('id', id);
+        if (error) console.error('Supabase removeDailyActivity failed:', error.message);
+      } catch(e){
+        console.error('Supabase removeDailyActivity threw:', e.message);
+      }
+      return;
+    }
+    const items = (await fetchDailyActivities()).filter(a => a.id !== id);
+    localStorage.setItem(DAILY_ACTIVITIES_STORAGE_KEY, JSON.stringify(items));
+  }
+
+  function formatEventDate(iso){
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return { day: '--', month: '---' };
+    return {
+      day: d.getDate(),
+      month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+    };
+  }
+
+  async function renderEvents(){
+    const grid = document.getElementById('eventsGrid');
+    const toolbar = document.getElementById('eventsToolbar');
+    const events = await fetchEvents();
+    const admin = isAdmin();
+
+    toolbar.style.display = admin ? 'flex' : 'none';
+
+    if (!events.length){
+      grid.innerHTML = admin
+        ? '<div class="empty-state">No upcoming events yet — use "+ Add Event" above to create the first one.</div>'
+        : '<div class="empty-state">No upcoming events right now — check back soon.</div>';
+      return;
+    }
+
+    grid.innerHTML = events.map(ev => {
+      const { day, month } = formatEventDate(ev.date);
+      const photo = ev.image
+        ? `<img src="${ev.image}" alt="${ev.title}" onerror="this.parentElement.innerHTML='<span class=&quot;no-photo&quot;>No photo yet</span>'">`
+        : `<span class="no-photo">No photo yet</span>`;
+      const controls = admin ? `
+          <div class="event-edit-controls">
+            <button class="event-icon-btn edit" data-edit="${ev.id}" title="Edit event" aria-label="Edit event">✎</button>
+            <button class="event-icon-btn delete" data-delete="${ev.id}" title="Delete event" aria-label="Delete event">✕</button>
+          </div>` : '';
+      return `
+        <div class="event-card">
+          ${controls}
+          <div class="event-photo">
+            ${photo}
+            <span class="event-date-badge">${month} ${day}</span>
+          </div>
+          <div class="event-body">
+            <h4>${ev.title}</h4>
+            <span class="event-time">${ev.time || ''}</span>
+            <p>${ev.description || ''}</p>
+          </div>
+        </div>`;
+    }).join('');
+
+    if (admin){
+      grid.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => openEventForm(btn.dataset.edit));
+      });
+      grid.querySelectorAll('[data-delete]').forEach(btn => {
+        btn.addEventListener('click', () => deleteEvent(btn.dataset.delete));
+      });
+    }
+  }
+
+  async function deleteEvent(id){
+    if (!confirm('Delete this event? This cannot be undone.')) return;
+    await removeEvent(id);
+    await renderEvents();
+  }
+
+  function resetEventPhotoField(){
+    const preview = document.getElementById('evImagePreview');
+    const removeBtn = document.getElementById('evImageRemove');
+    const hidden = document.getElementById('evImage');
+    const fileInput = document.getElementById('evImageFile');
+    preview.src = '';
+    preview.classList.remove('visible');
+    removeBtn.classList.remove('visible');
+    hidden.value = '';
+    fileInput.value = '';
+  }
+
+  function setEventPhotoField(dataUrl){
+    const preview = document.getElementById('evImagePreview');
+    const removeBtn = document.getElementById('evImageRemove');
+    const hidden = document.getElementById('evImage');
+    hidden.value = dataUrl || '';
+    if (dataUrl){
+      preview.src = dataUrl;
+      preview.classList.add('visible');
+      removeBtn.classList.add('visible');
+    } else {
+      preview.src = '';
+      preview.classList.remove('visible');
+      removeBtn.classList.remove('visible');
+    }
+  }
+
+  async function openEventForm(editId){
+    const modal = document.getElementById('eventFormModal');
+    const form = document.getElementById('eventForm');
+    const title = document.getElementById('eventFormTitle');
+    form.reset();
+    resetEventPhotoField();
+    form.dataset.editId = editId || '';
+
+    if (editId){
+      const ev = (await fetchEvents()).find(e => e.id === editId);
+      if (ev){
+        title.textContent = 'Edit event';
+        document.getElementById('evTitle').value = ev.title || '';
+        document.getElementById('evDate').value = ev.date || '';
+        document.getElementById('evTime').value = ev.time || '';
+        document.getElementById('evDescription').value = ev.description || '';
+        setEventPhotoField(ev.image || '');
+      }
+    } else {
+      title.textContent = 'Add event';
+    }
+    modal.classList.add('open');
+  }
+
+  function closeEventForm(){
+    document.getElementById('eventFormModal').classList.remove('open');
+  }
+
+  async function renderDailyActivities(){
+    const container = document.getElementById('dailyActivitiesList');
+    const toolbar = document.getElementById('wodBoardToolbar');
+    const items = await fetchDailyActivities();
+    const admin = isAdmin();
+
+    toolbar.style.display = admin ? 'flex' : 'none';
+
+    if (!items.length){
+      container.innerHTML = admin
+        ? '<p style="font-family:var(--mono); font-size:0.85rem; color:#D9D9D9;">No activities yet — use "+ Add Activity" above.</p>'
+        : '<p style="font-family:var(--mono); font-size:0.85rem; color:#D9D9D9;">Board is empty right now — check back soon.</p>';
+      return;
+    }
+
+    container.innerHTML = items.map(item => {
+      const controls = admin ? `
+        <span class="wod-line-controls">
+          <button class="wod-icon-btn edit" data-edit-activity="${item.id}" title="Edit activity" aria-label="Edit activity">✎</button>
+          <button class="wod-icon-btn delete" data-delete-activity="${item.id}" title="Delete activity" aria-label="Delete activity">✕</button>
+        </span>` : '';
+      return `
+        <div class="wod-line">
+          <span class="wod-name">${item.name}</span>
+          <span class="wod-status">${item.status}</span>
+          ${controls}
+        </div>`;
+    }).join('');
+
+    if (admin){
+      container.querySelectorAll('[data-edit-activity]').forEach(btn => {
+        btn.addEventListener('click', () => openActivityForm(btn.dataset.editActivity));
+      });
+      container.querySelectorAll('[data-delete-activity]').forEach(btn => {
+        btn.addEventListener('click', () => deleteActivity(btn.dataset.deleteActivity));
+      });
+    }
+  }
+
+  async function deleteActivity(id){
+    if (!confirm('Delete this board item? This cannot be undone.')) return;
+    await removeDailyActivity(id);
+    await renderDailyActivities();
+  }
+
+  async function openActivityForm(editId){
+    const modal = document.getElementById('activityFormModal');
+    const form = document.getElementById('activityForm');
+    const title = document.getElementById('activityFormTitle');
+    form.reset();
+    form.dataset.editId = editId || '';
+
+    if (editId){
+      const item = (await fetchDailyActivities()).find(a => a.id === editId);
+      if (item){
+        title.textContent = 'Edit activity';
+        document.getElementById('daName').value = item.name || '';
+        document.getElementById('daStatus').value = item.status || '';
+      }
+    } else {
+      title.textContent = 'Add daily activity';
+    }
+    modal.classList.add('open');
+  }
+
+  function closeActivityForm(){
+    document.getElementById('activityFormModal').classList.remove('open');
+  }
+
+  function setAdminUI(admin){
+    document.getElementById('adminBadge').classList.toggle('visible', admin);
+  }
+
+  function initAdminControls(){
+    const entryLink = document.getElementById('adminEntryLink');
+    const loginModal = document.getElementById('adminLoginModal');
+    const loginForm = document.getElementById('adminLoginForm');
+    const loginError = document.getElementById('adminLoginError');
+    const loginCancel = document.getElementById('adminLoginCancel');
+    const logoutBtn = document.getElementById('adminLogoutBtn');
+
+    const addEventBtn = document.getElementById('addEventBtn');
+    const eventForm = document.getElementById('eventForm');
+    const eventFormCancel = document.getElementById('eventFormCancel');
+    const eventFormModal = document.getElementById('eventFormModal');
+    const evImageFile = document.getElementById('evImageFile');
+    const evImageRemove = document.getElementById('evImageRemove');
+
+    const addActivityBtn = document.getElementById('addActivityBtn');
+    const activityForm = document.getElementById('activityForm');
+    const activityFormCancel = document.getElementById('activityFormCancel');
+    const activityFormModal = document.getElementById('activityFormModal');
+
+    setAdminUI(isAdmin());
+
+    entryLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isAdmin()){
+        // Already logged in on this device — jump straight to events.
+        document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      loginError.textContent = '';
+      document.getElementById('adminPassword').value = '';
+      loginModal.classList.add('open');
+    });
+
+    loginCancel.addEventListener('click', () => loginModal.classList.remove('open'));
+    loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('open'); });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const entered = document.getElementById('adminPassword').value;
+      if (entered === ADMIN_PASSWORD){
+        localStorage.setItem(ADMIN_SESSION_KEY, "1");
+        loginModal.classList.remove('open');
+        setAdminUI(true);
+        await renderEvents();
+        await renderDailyActivities();
+        document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        loginError.textContent = 'Incorrect password. Try again.';
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      localStorage.removeItem(ADMIN_SESSION_KEY);
+      setAdminUI(false);
+      await renderEvents();
+      await renderDailyActivities();
+    });
+
+    /* ---- Event photo upload (reads the chosen file as a data URL, no server needed) ---- */
+    evImageFile.addEventListener('change', () => {
+      const file = evImageFile.files && evImageFile.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => setEventPhotoField(reader.result);
+      reader.readAsDataURL(file);
+    });
+    evImageRemove.addEventListener('click', () => resetEventPhotoField());
+
+    /* ---- Events ---- */
+    addEventBtn.addEventListener('click', () => openEventForm(null));
+    eventFormCancel.addEventListener('click', closeEventForm);
+    eventFormModal.addEventListener('click', (e) => { if (e.target === eventFormModal) closeEventForm(); });
+
+    eventForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = eventForm.dataset.editId;
+      const data = {
+        id: editId || ('evt-' + Date.now()),
+        title: document.getElementById('evTitle').value.trim(),
+        date: document.getElementById('evDate').value,
+        time: document.getElementById('evTime').value.trim(),
+        description: document.getElementById('evDescription').value.trim(),
+        image: document.getElementById('evImage').value
+      };
+
+      await upsertEvent(data);
+      closeEventForm();
+      await renderEvents();
+    });
+
+    /* ---- Daily activities board ---- */
+    addActivityBtn.addEventListener('click', () => openActivityForm(null));
+    activityFormCancel.addEventListener('click', closeActivityForm);
+    activityFormModal.addEventListener('click', (e) => { if (e.target === activityFormModal) closeActivityForm(); });
+
+    activityForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = activityForm.dataset.editId;
+      const data = {
+        id: editId || ('da-' + Date.now()),
+        name: document.getElementById('daName').value.trim(),
+        status: document.getElementById('daStatus').value.trim()
+      };
+
+      await upsertDailyActivity(data);
+      closeActivityForm();
+      await renderDailyActivities();
+    });
+  }
+
+  function renderTrainerCards(){
+    const grid = document.getElementById('trainerGrid');
+
+    grid.innerHTML = `
+      <a class="trainer-card" href="#gallery" data-jump="personal-training">
+        <div class="trainer-avatar" style="background:var(--yellow); color:var(--black);">PT</div>
+        <div class="trainer-body">
+          <h4>Personal Training</h4>
+          <span class="trainer-role">Personal Training</span>
+          <p>Personalised workouts designed around your goals, fitness level, and progress.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="boxing">
+        <div class="trainer-avatar" style="background:var(--black); color:var(--white);">BX</div>
+        <div class="trainer-body">
+          <h4>Boxing</h4>
+          <span class="trainer-role">Boxing Training</span>
+          <p>Improve your conditioning, coordination, speed, and confidence through boxing. Registration required — Ksh 1,500/month or Ksh 500/session.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="yoga">
+        <div class="trainer-avatar" style="background:var(--yellow); color:var(--black);">YG</div>
+        <div class="trainer-body">
+          <h4>Yoga</h4>
+          <span class="trainer-role">Yoga Training</span>
+          <p>Build flexibility, breath control, and calm through guided yoga sessions.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="zumba">
+        <div class="trainer-avatar" style="background:var(--black); color:var(--white);">ZM</div>
+        <div class="trainer-body">
+          <h4>Zumba</h4>
+          <span class="trainer-role">Zumba Training</span>
+          <p>High-energy dance fitness that makes cardio feel like a party.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="bike-spinning">
+        <div class="trainer-avatar" style="background:var(--yellow); color:var(--black);">BS</div>
+        <div class="trainer-body">
+          <h4>Bike Spinning</h4>
+          <span class="trainer-role">Indoor Cycling</span>
+          <p>High-energy indoor cycling classes that build endurance and torch calories to great music.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="weightlifting">
+        <div class="trainer-avatar" style="background:var(--yellow); color:var(--black);">WL</div>
+        <div class="trainer-body">
+          <h4>Weightlifting</h4>
+          <span class="trainer-role">Strength Training</span>
+          <p>Structured strength programming to build power and technique.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+
+      <a class="trainer-card" href="#gallery" data-jump="crossfit">
+        <div class="trainer-avatar" style="background:var(--black); color:var(--white);">CF</div>
+        <div class="trainer-body">
+          <h4>CrossFit</h4>
+          <span class="trainer-role">Functional Training</span>
+          <p>High-intensity functional training that builds strength and endurance.</p>
+          <span class="trainer-cta">View gallery →</span>
+        </div>
+      </a>
+    `;
+
+    grid.querySelectorAll('[data-jump]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => activateTab(card.dataset.jump), 300);
+      });
+    });
+  }
+
+  function activateTab(key){
+    document.querySelectorAll('.gallery-tab').forEach(t => t.classList.toggle('active', t.dataset.key === key));
+    document.querySelectorAll('.gallery-panel').forEach(p => p.classList.toggle('active', p.dataset.key === key));
+  }
+
+  function renderGallery(){
+    const services = SITE_CONTENT.services || {};
+    const keys = Object.keys(services);
+    const tabsEl = document.getElementById('galleryTabs');
+    const panelsEl = document.getElementById('galleryPanels');
+
+    tabsEl.innerHTML = keys.map((key, i) =>
+      `<button class="gallery-tab${i === 0 ? ' active' : ''}" data-key="${key}">${services[key].label}</button>`
+    ).join('');
+
+    panelsEl.innerHTML = keys.map((key, i) => {
+      const s = services[key];
+      const photosHtml = s.photos.length
+        ? `<div class="gallery-grid">${s.photos.map(src => `
+            <div class="gallery-photo">
+              <img src="${src}" alt="${s.label} photo" title="${src}" onerror="this.parentElement.innerHTML='<span class=&quot;gallery-photo-missing&quot; title=&quot;${src}&quot;>Photo not found</span>'">
+            </div>`).join('')}</div>`
+        : `<div class="empty-state">No photos yet for ${s.label} — add file paths to the "${key}" service in the SITE_CONTENT block.</div>`;
+      return `
+        <div class="gallery-panel${i === 0 ? ' active' : ''}" data-key="${key}">
+          <div class="gallery-panel-head"><p>${s.blurb}</p></div>
+          ${photosHtml}
+        </div>`;
+    }).join('');
+
+    tabsEl.querySelectorAll('.gallery-tab').forEach(tab => {
+      tab.addEventListener('click', () => activateTab(tab.dataset.key));
+    });
+  }
+
+  initAdminControls();
+  renderEvents();          // async — fires, then paints the grid once data resolves
+  renderDailyActivities(); // async — fires, then paints the board once data resolves
+  renderTrainerCards();
+  renderGallery();
+</script>
+
+</body>
+</html>
